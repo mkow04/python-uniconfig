@@ -64,8 +64,24 @@ class Config:
 
         self.load()
 
-    def check_keys(self):
-        if self.config.keys() == self.default_config.keys():
+    def check_keys(self, dict1=None, dict2=None):
+        if dict1 is None:
+            dict1 = self.config.copy()
+
+        if dict2 is None:
+            dict2 = self.default_config.copy()
+
+        if dict1.keys() != dict2.keys():
+            return False
+
+        for key, value in dict1.items():
+            if type(value) is dict and type(dict2.get(key)) is dict:
+                if not self.check_keys(value, dict2.get(key)):
+                    return False
+        return True
+
+    def check_keys_shallow(self, dict, dict2):
+        if dict.keys() == dict2.keys():
             return True
         else:
             return False

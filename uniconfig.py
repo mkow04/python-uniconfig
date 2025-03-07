@@ -62,6 +62,8 @@ class Config:
 
         self.config_file_path = Path(config_file_path).expanduser()
 
+        self.config = self.default_config.copy()
+
         self.load()
 
     def check_keys(self, dict1=None, dict2=None):
@@ -80,11 +82,11 @@ class Config:
                     return False
         return True
 
-    def create_default(self):
+    def save(self):
         self.config_file_path.parent.mkdir(parents=True, exist_ok=True)
 
         with self.config_file_path.open("w", errors="ignore") as config_file:
-            toml.dump(self.default_config, config_file)
+            toml.dump(self.config, config_file)
 
     def load(self):
         was_default_created = False
@@ -94,8 +96,7 @@ class Config:
                 self.config = toml.load(config_file)
         except FileNotFoundError as e:
             if self.is_creating_new_config:
-                self.create_default()
-                self.config = self.default_config.copy()
+                self.save()
                 was_default_created = True
             else:
                 raise e

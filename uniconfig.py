@@ -80,12 +80,6 @@ class Config:
                     return False
         return True
 
-    def check_keys_shallow(self, dict, dict2):
-        if dict.keys() == dict2.keys():
-            return True
-        else:
-            return False
-
     def create_default(self):
         self.config_file_path.parent.mkdir(parents=True, exist_ok=True)
 
